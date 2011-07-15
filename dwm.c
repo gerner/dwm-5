@@ -184,6 +184,7 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
+static void focusvisible(const Arg *arg);
 static unsigned long getcolor(const char *colstr);
 static Bool getrootptr(int *x, int *y);
 static long getstate(Window w);
@@ -976,6 +977,23 @@ focusstack(const Arg *arg) {
 	}
 }
 
+void
+focusvisible(const Arg *arg) {
+	Client *c = NULL;
+
+	if(!selmon->sel || arg->i < 0)
+		return;
+    int skipped=0;
+    //skip the invisible clients
+	for(c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
+    //skip arg->i visible clients
+	for(; c && skipped < arg->i; c = c->next, skipped += (ISVISIBLE(c))?1:0);
+	if(c) {
+		focus(c);
+		restack(selmon);
+	}
+}
+
 unsigned long
 getcolor(const char *colstr) {
 	Colormap cmap = DefaultColormap(dpy, screen);
@@ -1313,8 +1331,22 @@ nexttiled(Client *c) {
 
 void
 pop(Client *c) {
+    Client *p = NULL, *i;
+    //find c's parent p
+	for(p = c->mon->clients; p && p->next != c; p = p->next);
+
 	detach(c);
-	attach(c);
+
+    //find the first visible client after c (former master)
+    for(i = c->mon->clients; i && !ISVISIBLE(i); i = i->next)
+    //put it into c's old position (i.e. after p), as long as p and i exist are are different
+    if(p && i && p != i) {
+        detach(i);
+        i->next = p->next;
+        p->next = i;
+    }
+
+    attach(c);
 	focus(c);
 	arrange(c->mon);
 }

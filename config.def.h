@@ -24,7 +24,7 @@ static const Rule rules[] = {
 
 /* layout(s) */
 static const float mfact      = 0.5; /* factor of master area size [0.05..0.95] */
-static const Bool resizehints = True; /* True means respect size hints in tiled resizals */
+static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -35,6 +35,7 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod1Mask
+#define MODMETAKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -71,6 +72,15 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+    { MODMETAKEY,                   XK_1,      focusvisible,   {.i = 0 } },
+    { MODMETAKEY,                   XK_2,      focusvisible,   {.i = 1 } },
+    { MODMETAKEY,                   XK_3,      focusvisible,   {.i = 2 } },
+    { MODMETAKEY,                   XK_4,      focusvisible,   {.i = 3 } },
+    { MODMETAKEY,                   XK_5,      focusvisible,   {.i = 4 } },
+    { MODMETAKEY,                   XK_6,      focusvisible,   {.i = 5 } },
+    { MODMETAKEY,                   XK_7,      focusvisible,   {.i = 6 } },
+    { MODMETAKEY,                   XK_8,      focusvisible,   {.i = 7 } },
+    { MODMETAKEY,                   XK_9,      focusvisible,   {.i = 8 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
