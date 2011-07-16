@@ -15,13 +15,13 @@ diff -up dwm-5.9/dwm.c dwm-5.9test/dwm.c
 +
 +    detach(c);
 +
-+    //find the first visible client after c (former master)
-+    for(i = c->mon->clients; i && !ISVISIBLE(i); i = i->next);
-+    //put it into c's old position (i.e. after p), as long as p and i exist are are different
-+    if(p && i && p != i) {
-+        detach(i);
-+        i->next = p->next;
-+        p->next = i;
++    if(p) {
++        i = nexttiled(c->mon->clients);
++        if(i && p != i) {
++            detach(i);
++            i->next = p->next;
++            p->next = i;
++        }
 +    }
 +
 +    attach(c);
