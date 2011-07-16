@@ -433,8 +433,7 @@ void
 attachstackend(Client *c) {
     Client *p = c->mon->stack;
     if(p) {
-      dsf
-            ;li  for(; p->snext; p = p->snext);
+        for(; p->snext; p = p->snext);
         p->snext = c;
     } else {
         attachstack(c);
