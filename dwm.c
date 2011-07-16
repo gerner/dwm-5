@@ -138,6 +138,8 @@ static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
 static void attachstack(Client *c);
+static void attachend(Client *c);
+static void attachstackend(Client *c);
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
 static void cleanup(void);
@@ -411,9 +413,32 @@ arrangemon(Monitor *m) {
 }
 
 void
+attachend(Client *c) {
+    Client *p = c->mon->clients;
+    if(p) {
+        for(; p->next; p = p->next);
+        p->next = c;
+    } else {
+        attach(c);
+    }
+}
+
+void
 attach(Client *c) {
 	c->next = c->mon->clients;
 	c->mon->clients = c;
+}
+
+void
+attachstackend(Client *c) {
+    Client *p = c->mon->stack;
+    if(p) {
+      dsf
+            ;li  for(; p->snext; p = p->snext);
+        p->snext = c;
+    } else {
+        attachstack(c);
+    }
 }
 
 void
@@ -1237,8 +1262,8 @@ manage(Window w, XWindowAttributes *wa) {
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
 	if(c->isfloating)
 		XRaiseWindow(dpy, c->win);
-	attach(c);
-	attachstack(c);
+	attachend(c);
+	attachstackend(c);
 	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
 	XMapWindow(dpy, c->win);
 	setclientstate(c, NormalState);
