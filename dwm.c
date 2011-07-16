@@ -987,7 +987,7 @@ focusvisible(const Arg *arg) {
     //skip the invisible clients
 	for(c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
     //skip arg->i visible clients
-	for(; c && skipped < arg->i; c = c->next, skipped += (ISVISIBLE(c))?1:0);
+	for(; c && skipped < arg->i; skipped += (ISVISIBLE(c))?1:0, c = c->next);
 	if(c) {
 		focus(c);
 		restack(selmon);
@@ -1337,16 +1337,19 @@ pop(Client *c) {
 
 	detach(c);
 
-    //find the first visible client after c (former master)
-    for(i = c->mon->clients; i && !ISVISIBLE(i); i = i->next)
-    //put it into c's old position (i.e. after p), as long as p and i exist are are different
-    if(p && i && p != i) {
-        detach(i);
-        i->next = p->next;
-        p->next = i;
+    if(p) {
+        //find the current master
+        i = nexttiled(c->mon->clients);
+        //put it into c's old position (i.e. after p), as long as p and i exist are are different
+        if(i && p != i) {
+            detach(i);
+            i->next = p->next;
+            p->next = i;
+        }
     }
 
     attach(c);
+
 	focus(c);
 	arrange(c->mon);
 }
