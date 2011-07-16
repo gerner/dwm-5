@@ -1263,6 +1263,7 @@ manage(Window w, XWindowAttributes *wa) {
 		XRaiseWindow(dpy, c->win);
 	attachend(c);
 	attachstackend(c);
+	focus(c);
 	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
 	XMapWindow(dpy, c->win);
 	setclientstate(c, NormalState);
