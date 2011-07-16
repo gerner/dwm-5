@@ -9,7 +9,7 @@ diff -up a/dwm.c b/dwm.c
  static unsigned long getcolor(const char *colstr);
  static Bool getrootptr(int *x, int *y);
  static long getstate(Window w);
-@@ -976,6 +1014,26 @@ focusstack(const Arg *arg) {
+@@ -976,6 +1014,25 @@ focusstack(const Arg *arg) {
         }
  }
  
@@ -27,7 +27,6 @@ diff -up a/dwm.c b/dwm.c
 +       //skip the invisible clients
 +       for(; c && !ISVISIBLE(c); c = c->next);
 +       if(c) {
-+               fprintf(stderr, "focusing\n");
 +               focus(c);
 +               restack(selmon);
 +       }
