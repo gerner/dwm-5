@@ -1,0 +1,32 @@
+diff -up dwm-5.9/dwm.c dwm-5.9test/dwm.c
+--- dwm-5.9/dwm.c	2011-07-14 13:40:13.796435821 -0700
++++ dwm-5.9test/dwm.c	2011-07-16 09:31:56.507999046 -0700
+@@ -1313,10 +1313,24 @@ nexttiled(Client *c) {
+ 
+ void
+ pop(Client *c) {
+-	detach(c);
+-	attach(c);
+-	focus(c);
+-	arrange(c->mon);
++    Client *p = NULL, *i;
++    //find c's parent p
++    for(p = c->mon->clients; p && p->next != c; p = p->next);
++
++    detach(c);
++
++    //find the first visible client after c (former master)
++    for(i = c->mon->clients; i && !ISVISIBLE(i); i = i->next);
++    //put it into c's old position (i.e. after p), as long as p and i exist are are different
++    if(p && i && p != i) {
++        detach(i);
++        i->next = p->next;
++        p->next = i;
++    }
++
++    attach(c);
++    focus(c);
++    arrange(c->mon);
+ }
+ 
+ void
