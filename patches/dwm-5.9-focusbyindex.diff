@@ -1,6 +1,6 @@
-diff -up /home/nick/downloads/dwm-5.9/dwm.c dwm/dwm.c
---- /home/nick/downloads/dwm-5.9/dwm.c  2011-07-14 13:40:13.796435821 -0700
-+++ dwm/dwm.c   2011-07-15 14:05:44.531827527 -0700
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c  2011-07-14 13:40:13.796435821 -0700
++++ b/dwm.c   2011-07-15 14:05:44.531827527 -0700
 @@ -184,6 +184,7 @@ static void focus(Client *c);
  static void focusin(XEvent *e);
  static void focusmon(const Arg *arg);
@@ -9,22 +9,25 @@ diff -up /home/nick/downloads/dwm-5.9/dwm.c dwm/dwm.c
  static unsigned long getcolor(const char *colstr);
  static Bool getrootptr(int *x, int *y);
  static long getstate(Window w);
-@@ -976,6 +977,23 @@ focusstack(const Arg *arg) {
+@@ -976,6 +1014,26 @@ focusstack(const Arg *arg) {
         }
  }
  
 +void
 +focusvisible(const Arg *arg) {
 +       Client *c = NULL;
++       int s;
 +
 +       if(!selmon->sel || arg->i < 0)
 +               return;
-+    int skipped=0;
-+    //skip the invisible clients
++       //skip the invisible clients
 +       for(c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
-+    //skip arg->i visible clients
-+       for(; c && skipped < arg->i; skipped += (ISVISIBLE(c))?1:0, c = c->next);
++       //skip arg->i visible clients
++       for(s = 0; c && s < arg->i; s += (ISVISIBLE(c))?1:0, c = c->next);
++       //skip the invisible clients
++       for(; c && !ISVISIBLE(c); c = c->next);
 +       if(c) {
++               fprintf(stderr, "focusing\n");
 +               focus(c);
 +               restack(selmon);
 +       }
@@ -33,4 +36,3 @@ diff -up /home/nick/downloads/dwm-5.9/dwm.c dwm/dwm.c
  unsigned long
  getcolor(const char *colstr) {
         Colormap cmap = DefaultColormap(dpy, screen);
-

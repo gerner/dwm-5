@@ -1017,15 +1017,18 @@ focusstack(const Arg *arg) {
 void
 focusvisible(const Arg *arg) {
 	Client *c = NULL;
+	int s;
 
 	if(!selmon->sel || arg->i < 0)
 		return;
-    int skipped=0;
-    //skip the invisible clients
+	//skip the invisible clients
 	for(c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
-    //skip arg->i visible clients
-	for(; c && skipped < arg->i; skipped += (ISVISIBLE(c))?1:0, c = c->next);
+	//skip arg->i visible clients
+	for(s = 0; c && s < arg->i; s += (ISVISIBLE(c))?1:0, c = c->next);
+	//skip the invisible clients
+	for(; c && !ISVISIBLE(c); c = c->next);
 	if(c) {
+		fprintf(stderr, "focusing\n");
 		focus(c);
 		restack(selmon);
 	}
