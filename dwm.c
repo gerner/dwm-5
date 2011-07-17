@@ -1062,7 +1062,6 @@ focusvisible(const Arg *arg) {
 	//skip the invisible clients
 	for(; c && !ISVISIBLE(c); c = c->next);
 	if(c) {
-		fprintf(stderr, "focusing\n");
 		focus(c);
 		restack(selmon);
 	}
