@@ -13,7 +13,7 @@ static const unsigned int snap      = 32;       /* snap pixel */
 static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = False;     /* False means bottom bar */
 
-#define NUMCOLORS         4
+#define NUMCOLORS         5
 static const char colors[NUMCOLORS][ColLast][8] = {
   // border   foreground background
   { "#333333", "#aaaaaa", "#000000" },  // normal
@@ -92,6 +92,10 @@ static Key keys[] = {
     { MODMETAKEY,                   XK_7,      focusvisible,   {.i = 6 } },
     { MODMETAKEY,                   XK_8,      focusvisible,   {.i = 7 } },
     { MODMETAKEY,                   XK_9,      focusvisible,   {.i = 8 } },
+    { MODKEY,                       XK_Left,   focusvisible,   {.i = 0 } },
+    { MODKEY,                       XK_Right,  focusvisible,   {.i = 1 } },
+    { MODKEY,                       XK_Up,     focusstack,     {.i = -1 } },
+    { MODKEY,                       XK_Down,   focusstack,     {.i = +1 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
