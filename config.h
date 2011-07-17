@@ -3,8 +3,8 @@
 /* appearance */
 static const char font[]            = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
 static const char normbordercolor[] = "#333333";
-static const char normbgcolor[]     = "#aaaaaa";
-static const char normfgcolor[]     = "#000000";
+static const char normbgcolor[]     = "#000000";
+static const char normfgcolor[]     = "#aaaaaa";
 static const char selbordercolor[]  = "#aaaaaa";
 static const char selbgcolor[]      = "#333333";
 static const char selfgcolor[]      = "#999999";
@@ -12,6 +12,17 @@ static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = False;     /* False means bottom bar */
+
+#define NUMCOLORS         5
+static const char colors[NUMCOLORS][ColLast][8] = {
+  // border   foreground background
+  { "#333333", "#aaaaaa", "#000000" },  // normal
+  { "#000088", "#00ff00", "#000000" },  // good
+  { "#ff0000", "#ffff00", "#000000" },  // warning
+  { "#ff0000", "#ff0000", "#000000" },  // error
+  { "#333333", "#aaaaaa", "#000000" },  // back to normal (for endpoints that are regular)
+  // add more here
+};
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };

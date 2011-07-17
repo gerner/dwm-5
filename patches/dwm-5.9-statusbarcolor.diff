@@ -1,0 +1,123 @@
+diff --git a/dwm.c b/dwm.c
+index ec53801..abc9fcc 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -53,6 +53,7 @@
+ #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
+ #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
+ #define TEXTW(X)                (textnw(X, strlen(X)) + dc.font.height)
++#define MAXCOLORS               8
+ 
+ /* enums */
+ enum { CurNormal, CurResize, CurMove, CurLast };        /* cursor */
+@@ -99,6 +100,7 @@ typedef struct {
+ 	int x, y, w, h;
+ 	unsigned long norm[ColLast];
+ 	unsigned long sel[ColLast];
++    unsigned long colors[MAXCOLORS][ColLast];
+ 	Drawable drawable;
+ 	GC gc;
+ 	struct {
+@@ -160,6 +162,8 @@ static void drawbars(void);
+ static void drawvline(unsigned long col[ColLast]);
+ static void drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]);
+ static void drawtext(const char *text, unsigned long col[ColLast], Bool invert);
++static void drawpaddedtext(const char *text, unsigned long col[ColLast], Bool invert, Bool padding);
++static void drawcoloredtext(char *text);
+ static void enternotify(XEvent *e);
+ static void expose(XEvent *e);
+ static void focus(Client *c);
+@@ -795,7 +799,7 @@ drawbar(Monitor *m) {
+ 			dc.x = x;
+ 			dc.w = m->ww - x;
+ 		}
+-		drawtext(stext, dc.norm, False);
++		drawcoloredtext(stext);
+ 	}
+ 	else
+ 		dc.x = m->ww;
+@@ -889,7 +893,36 @@ drawsquare(Bool filled, Bool empty, Bool invert, unsigned long col[ColLast]) {
+ }
+ 
+ void
++drawcoloredtext(char *text) {
++	char *buf = text, *ptr = buf, c = 1;
++	unsigned long *col = dc.colors[0];
++	int i, ox = dc.x;
++
++	while( *ptr ) {
++		for( i = 0; *ptr < 0 || *ptr > NUMCOLORS; i++, ptr++);
++		if( !*ptr ) break;
++		c=*ptr;
++		*ptr=0;
++		if( i ) {
++			dc.w = selmon->ww - dc.x;
++			drawpaddedtext(buf, col, False, False);
++			dc.x += textnw(buf, i);
++		}
++		*ptr = c;
++		col = dc.colors[ c-1 ];
++		buf = ++ptr;
++	}
++	drawpaddedtext(buf, col, False, False);
++	dc.x = ox;
++}
++
++void
+ drawtext(const char *text, unsigned long col[ColLast], Bool invert) {
++    drawpaddedtext(text, col, invert, True);
++}
++
++void
++drawpaddedtext(const char *text, unsigned long col[ColLast], Bool invert, Bool padding) {
+ 	char buf[256];
+ 	int i, x, y, h, len, olen;
+ 
+@@ -900,7 +933,8 @@ drawtext(const char *text, unsigned long col[ColLast], Bool invert) {
+ 	olen = strlen(text);
+ 	h = dc.font.ascent + dc.font.descent;
+ 	y = dc.y + (dc.h / 2) - (h / 2) + dc.font.ascent;
+-	x = dc.x + (h / 2);
++    if(padding) x = dc.x + (h/2);
++    else x = dc.x;
+ 	/* shorten text if necessary */
+ 	for(len = MIN(olen, sizeof buf); len && textnw(text, len) > dc.w - h; len--);
+ 	if(!len)
+@@ -1690,6 +1724,13 @@ setup(void) {
+ 	dc.sel[ColBorder] = getcolor(selbordercolor);
+ 	dc.sel[ColBG] = getcolor(selbgcolor);
+ 	dc.sel[ColFG] = getcolor(selfgcolor);
++
++	for(int i=0; i<NUMCOLORS; i++) {
++		dc.colors[i][ColBorder] = getcolor( colors[i][ColBorder] );
++		dc.colors[i][ColFG] = getcolor( colors[i][ColFG] );
++		dc.colors[i][ColBG] = getcolor( colors[i][ColBG] );
++	}
++
+ 	dc.drawable = XCreatePixmap(dpy, root, DisplayWidth(dpy, screen), bh, DefaultDepth(dpy, screen));
+ 	dc.gc = XCreateGC(dpy, root, 0, NULL);
+ 	XSetLineAttributes(dpy, dc.gc, 1, LineSolid, CapButt, JoinMiter);
+@@ -1764,12 +1805,21 @@ tagmon(const Arg *arg) {
+ int
+ textnw(const char *text, unsigned int len) {
+ 	XRectangle r;
++    char buf[len+1];
++    unsigned int blen,i;
++
++    for(i=0,blen=0; i<len; i++) {
++        if(text[i] > NUMCOLORS) {
++            buf[blen++] = text[i];
++        }
++    }
++    buf[blen] = 0;
+ 
+ 	if(dc.font.set) {
+-		XmbTextExtents(dc.font.set, text, len, NULL, &r);
++		XmbTextExtents(dc.font.set, buf, blen, NULL, &r);
+ 		return r.width;
+ 	}
+-	return XTextWidth(dc.font.xfont, text, len);
++	return XTextWidth(dc.font.xfont, buf, blen);
+ }
+ 
+ void
