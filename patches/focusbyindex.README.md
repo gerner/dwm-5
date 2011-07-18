@@ -16,6 +16,8 @@ Add some key bindings to your config.h.
 ### Example
 
 ```c
+static Key keys[] = {
+...
     { Mod4Mask,                     XK_1,      focusvisible,   {.i = 0 } },
     { Mod4Mask,                     XK_2,      focusvisible,   {.i = 1 } },
     { Mod4Mask,                     XK_3,      focusvisible,   {.i = 2 } },
@@ -27,6 +29,7 @@ Add some key bindings to your config.h.
     { Mod4Mask,                     XK_9,      focusvisible,   {.i = 8 } },
     { MODKEY,                       XK_Left,   focusvisible,   {.i = 0 } },
     { MODKEY,                       XK_Right,  focusvisible,   {.i = 1 } },
+...
 ```
 
 The above lines let you jump to a numbered client or immediately to the master window or first slave window.
