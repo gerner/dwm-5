@@ -1,5 +1,5 @@
-FOCUS BY VISIBLE CLIENT LIST INDEX
-==================================
+ZOOM SWAPS CURRENT MASTER
+=========================
 
 Description
 -----------

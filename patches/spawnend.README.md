@@ -1,5 +1,5 @@
-FOCUS BY VISIBLE CLIENT LIST INDEX
-==================================
+ADD SPAWNED WINDOWS TO END OF CLIENT LIST
+=========================================
 
 Description
 -----------
