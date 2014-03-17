@@ -94,8 +94,6 @@ static Key keys[] = {
     { MODMETAKEY,                   XK_7,      focusvisible,   {.i = 6 } },
     { MODMETAKEY,                   XK_8,      focusvisible,   {.i = 7 } },
     { MODMETAKEY,                   XK_9,      focusvisible,   {.i = 8 } },
-    { MODKEY,                       XK_Left,   focusvisible,   {.i = 0 } },
-    { MODKEY,                       XK_Right,  focusvisible,   {.i = 1 } },
     { MODKEY,                       XK_Up,     focusstack,     {.i = -1 } },
     { MODKEY,                       XK_Down,   focusstack,     {.i = +1 } },
 	TAGKEYS(                        XK_1,                      0)
