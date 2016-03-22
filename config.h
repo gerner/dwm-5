@@ -1,7 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const char font[]            = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
+//static const char font[]            = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
+static const char font[]            = "-*-fixed-medium-r-semicondensed-*-13-*-*-*-*-*-iso10646-*";
 static const char normbordercolor[] = "#333333";
 static const char normbgcolor[]     = "#000000";
 static const char normfgcolor[]     = "#aaaaaa";
@@ -58,9 +59,12 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *termcmd[]  = { "xterm", NULL };
+static const char *termcmd[]  = { "st", NULL };
 static const char *lockcmd[] = { "lock", NULL };
-static const char *dclipcmd[] = { "dclip", "paste", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor , "-sf", selfgcolor, NULL };
+static const char *dclip_copy_cmd[] = { "dclip", "copy" };
+static const char *dclip_paste_cmd[] = { "dclip", "paste", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor , "-sf", selfgcolor, NULL };
+static const char *upvol[] = { "amixer", "set", "Master", "3+", NULL};
+static const char *downvol[] = { "amixer", "set", "Master", "3-", NULL};
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
@@ -107,8 +111,11 @@ static Key keys[] = {
     TAGKEYS(                        XK_8,                      7)
     TAGKEYS(                        XK_9,                      8)
     { MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-    { ControlMask|ShiftMask,        XK_c,      spawn,          SHCMD("exec dclip copy") },
-    { ControlMask|ShiftMask,        XK_v,      spawn,          {.v = dclipcmd } },
+    { MODKEY,                       XK_c,      spawn,          {.v = dclip_copy_cmd } },
+    { MODKEY,                       XK_v,      spawn,          {.v = dclip_paste_cmd } },
+    { MODKEY,                       XK_F5,     spawn,          SHCMD("video-swap") },
+    { MODKEY,                       XK_F11,    spawn,          {.v = downvol } },
+    { MODKEY,                       XK_F12,    spawn,          {.v = upvol } },
 };
 
 /* button definitions */
