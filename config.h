@@ -1,5 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
+#include <X11/XF86keysym.h>
+
 /* appearance */
 //static const char font[]            = "-*-terminus-medium-r-*-*-16-*-*-*-*-*-*-*";
 static const char font[]            = "-*-fixed-medium-r-semicondensed-*-13-*-*-*-*-*-iso10646-*";
@@ -63,8 +65,10 @@ static const char *termcmd[]  = { "st", NULL };
 static const char *lockcmd[] = { "lock", NULL };
 static const char *dclip_copy_cmd[] = { "dclip", "copy" };
 static const char *dclip_paste_cmd[] = { "dclip", "paste", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor , "-sf", selfgcolor, NULL };
-static const char *upvol[] = { "amixer", "set", "Master", "3+", NULL};
-static const char *downvol[] = { "amixer", "set", "Master", "3-", NULL};
+static const char *upvol[] = { "pactl", "--", "set-sink-volume", "1", "+5%", NULL};
+static const char *downvol[] = { "pactl", "--", "set-sink-volume", "1", "-5%", NULL};
+static const char *mute_toggle_vol[] = { "amixer", "-D", "pulse", "set", "Master", "toggle", NULL};
+static const char *mute_mic_toggle_vol[] = { "amixer", "-D", "pulse", "set", "Capture", "toggle", NULL};
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
@@ -114,8 +118,10 @@ static Key keys[] = {
     { MODKEY,                       XK_c,      spawn,          {.v = dclip_copy_cmd } },
     { MODKEY,                       XK_v,      spawn,          {.v = dclip_paste_cmd } },
     { MODKEY,                       XK_F5,     spawn,          SHCMD("video-swap") },
-    { MODKEY,                       XK_F11,    spawn,          {.v = downvol } },
-    { MODKEY,                       XK_F12,    spawn,          {.v = upvol } },
+    { 0,                            XF86XK_AudioLowerVolume,   spawn,  {.v = downvol } },
+    { 0,                            XF86XK_AudioRaiseVolume,   spawn,  {.v = upvol } },
+    { 0,                            XF86XK_AudioMute,          spawn,  {.v = mute_toggle_vol } },
+    { 0,                            XF86XK_AudioMicMute,       spawn,  {.v = mute_mic_toggle_vol } },
 };
 
 /* button definitions */
