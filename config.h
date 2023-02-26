@@ -69,6 +69,8 @@ static const char *upvol[] = { "amixer", "-D", "pulse", "set", "Master", "5%+", 
 static const char *downvol[] = { "amixer", "-D", "pulse", "set", "Master", "5%-", NULL};
 static const char *mute_toggle_vol[] = { "amixer", "-D", "pulse", "set", "Master", "toggle", NULL};
 static const char *mute_mic_toggle_vol[] = { "amixer", "-D", "pulse", "set", "Capture", "toggle", NULL};
+static const char *upbrightness[] = { "xbacklight", "-inc", "10", NULL};
+static const char *downbrightness[] = { "xbacklight", "-dec", "10", NULL};
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
@@ -122,6 +124,8 @@ static Key keys[] = {
     { 0,                            XF86XK_AudioRaiseVolume,   spawn,  {.v = upvol } },
     { 0,                            XF86XK_AudioMute,          spawn,  {.v = mute_toggle_vol } },
     { 0,                            XF86XK_AudioMicMute,       spawn,  {.v = mute_mic_toggle_vol } },
+    { 0,                            XF86XK_MonBrightnessDown,  spawn,  {.v = downbrightness } },
+    { 0,                            XF86XK_MonBrightnessUp,    spawn,  {.v = upbrightness } },
 };
 
 /* button definitions */
